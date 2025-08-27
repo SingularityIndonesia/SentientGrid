@@ -1,2 +1,2 @@
 .idea/
-/kafka/test/go.sum
+/infra/containers/kafka/test/go.sum
