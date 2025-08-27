@@ -8,7 +8,7 @@ clear
 clear
 
 # start new service
-docker run -d -p 9092:9092 -p 9093:9093 thingsbe-kafka
+docker run -d -p 9092:9092 -p 9093:9093 --name sentientgrid-kafka sentientgrid-kafka
 clear
 
 # run listener

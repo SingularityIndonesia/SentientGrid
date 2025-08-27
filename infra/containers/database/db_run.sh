@@ -1,20 +1,20 @@
 #!/bin/sh
 # build docker image
 ./db_build.sh
-clear
+#clear
 
 # stop running service if any
 ./db_stop.sh
-clear
+#clear
 
 # start new service
 echo "Starting PostgreSQL database service..."
-docker run -d -p 9094:9094 --name thingsbe-database thingsbe-db
-clear
+docker run -d -p 9094:9094 --name sentientgrid-db sentientgrid-db
+#clear
 
 # show running containers
 echo "Database service started!"
-docker ps | grep thingsbe-db
+docker ps | grep sentientgrid-db
 
 # show connection info
 echo ""

@@ -14,4 +14,4 @@ fi
 
 # Build the Docker image
 echo "Building Docker image..."
-docker build -t thingsbe-db .
+docker build -t sentientgrid-db .
