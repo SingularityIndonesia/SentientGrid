@@ -9,7 +9,7 @@ db_stop.sh
 
 # start new service
 echo "Starting PostgreSQL database service..."
-docker run -d -p 9094:9094 --name sentientgrid-db sentientgrid-db
+docker run -d -p 9094:9094 sentientgrid-db
 #clear
 
 # show running containers

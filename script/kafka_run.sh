@@ -8,5 +8,5 @@ kafka_stop.sh
 #clear
 
 # start new service
-docker run -d -p 9092:9092 -p 9093:9093 --name sentientgrid-kafka sentientgrid-kafka
+docker run -d -p 9092:9092 -p 9093:9093 sentientgrid-kafka
 #clear
