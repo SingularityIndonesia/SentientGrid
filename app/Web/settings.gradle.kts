@@ -1,4 +1,4 @@
-rootProject.name = "SentientGrid"
+rootProject.name = "Web"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -12,6 +12,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        includeBuild("../Plugin")
     }
 }
 
@@ -25,7 +26,20 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+//        includeBuild("../Main") {
+//            dependencySubstitution {
+//                // include all Library
+//                File(settingsDir, "../Main")
+//                    .listFiles()
+//                    ?.asSequence()
+//                    ?.filter { it.isDirectory }
+//                    ?.filter { it.listFiles()?.map { it.name }?.contains("build.gradle.kts") == true }
+//                    ?.onEach { dir ->
+//                        substitute(module("main:${dir.name}")).using(project(":${dir.name}"))
+//                    }?.toList()
+//            }
+//        }
     }
 }
 
-includeBuild("Web")
+include(":composeApp")
