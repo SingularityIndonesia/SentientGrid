@@ -9,7 +9,3 @@ if [ -n "$mTargetId" ]; then
 else
     echo "No running sentientgrid-db service found"
 fi
-
-# also stop by container name if exists
-docker stop sentientgrid-db 2>/dev/null
-docker rm sentientgrid-db 2>/dev/null

@@ -1,10 +1,10 @@
 #!/bin/sh
 # build docker image
-./db_build.sh
+db_build.sh
 #clear
 
 # stop running service if any
-./db_stop.sh
+db_stop.sh
 #clear
 
 # start new service
