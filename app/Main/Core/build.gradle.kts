@@ -32,6 +32,7 @@ dependency {
     wasm {
         // JS-specific HTTP client
         api(libs.ktor.client.js)
+        implementation(npm("mqtt", "5.14.1"))
     }
 
     common {

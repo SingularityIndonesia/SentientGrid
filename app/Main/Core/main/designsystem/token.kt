@@ -1,4 +1,4 @@
-package designsystemold
+package designsystem
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography

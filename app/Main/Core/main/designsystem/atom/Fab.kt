@@ -1,4 +1,4 @@
-package designsystemold.component
+package designsystem.atom
 
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon

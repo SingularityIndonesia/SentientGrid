@@ -1,4 +1,4 @@
-package designsystemold.component
+package designsystem.atom
 
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalContentColor

@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION", "ObjectPropertyName")
 
-package designsystemold
+package designsystem
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 

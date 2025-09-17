@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import designsystemold.component.HeadlineMediumText
+import designsystem.atom.HeadlineMediumText
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**

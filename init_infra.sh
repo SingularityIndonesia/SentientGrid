@@ -8,3 +8,4 @@ db_run.sh
 #! init kafka
 kafka_build.sh
 kafka_run.sh
+docker ps

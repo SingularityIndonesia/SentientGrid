@@ -1,4 +1,4 @@
-package designsystemold
+package designsystem
 
 import androidx.compose.ui.graphics.Color
 

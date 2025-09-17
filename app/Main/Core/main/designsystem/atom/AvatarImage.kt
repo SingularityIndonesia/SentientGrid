@@ -1,4 +1,4 @@
-package designsystemold.component
+package designsystem.atom
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.ImagePainter
-import designsystemold.DarkThemePalette
+import designsystem.DarkThemePalette
 import font.resources.Res
 import font.resources.compose_multiplatform
 import model.Image

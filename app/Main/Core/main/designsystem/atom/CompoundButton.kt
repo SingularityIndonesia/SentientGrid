@@ -1,4 +1,4 @@
-package designsystem
+package designsystem.atom
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import designsystem.SSurface
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class Action(

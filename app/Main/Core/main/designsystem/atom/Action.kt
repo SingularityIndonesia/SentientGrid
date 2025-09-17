@@ -1,4 +1,4 @@
-package designsystemold.component
+package designsystem.atom
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size

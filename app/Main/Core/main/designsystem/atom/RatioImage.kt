@@ -1,4 +1,4 @@
-package designsystemold.component
+package designsystem.atom
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.Composable
