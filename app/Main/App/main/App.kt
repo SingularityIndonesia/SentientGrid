@@ -7,7 +7,6 @@ import designsystem.SingularityTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.navigation.MainNavigation
 import ui.navigation.rememberDeepLinkHandler
-import ui.pane.MQTTLogPane
 
 @Preview
 @Composable

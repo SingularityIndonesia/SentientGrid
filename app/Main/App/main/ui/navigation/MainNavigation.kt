@@ -2,7 +2,6 @@ package ui.navigation
 
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -12,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import ui.screen.home.HomeScreen
+import ui.screen.world.WorldScreen
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview
@@ -25,7 +24,7 @@ fun MainNavigation(
     NavHost(
         modifier = modifier,
         navController = controller,
-        startDestination = "home",
+        startDestination = "world",
         enterTransition = { slideIn { IntOffset(x = it.width, y = 0) } },
         popEnterTransition = { slideIn { IntOffset(x = -it.width, y = 0) } },
         exitTransition = { slideOut { IntOffset(x = -it.width, y = 0) } },
@@ -34,7 +33,14 @@ fun MainNavigation(
         composable(
             route = "home"
         ) {
-            HomeScreen()
+
+        }
+
+        composable(
+            route = "world"
+        ) {
+            WorldScreen()
         }
     }
+
 }
