@@ -101,7 +101,7 @@ private fun DrawScope.StatusLayer(state: MapPaneState) {
 
     organismRects.filter {
         it.second != null && pointerPosition in it.second!!
-    }.map {
+    }.forEach {
         val rect = it.second!!
         scale(2f, 2f, rect.center) {
             drawRoundRect(
