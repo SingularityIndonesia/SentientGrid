@@ -71,36 +71,46 @@ fun MapPane(
             // detect zoom
             .onZoom { state.magnification.value *= it }
     ) {
-        val pointerPosition = state.pointerPosition.value
-        val organismRects = state.organismRects(this)
+        OrganismMapLayer(state)
+        StatusLayer(state)
+    }
+}
 
-        // layer 1, organism map
-        organismRects.forEach { organismRect ->
-            val rect = organismRect.second
-            requireNotNull(rect) { return@forEach }
+private fun DrawScope.OrganismMapLayer(state: MapPaneState) {
+    val organismRects = state.organismRects(this)
 
+    // layer 1, organism map
+    organismRects.forEach { organismRect ->
+        val rect = organismRect.second
+        requireNotNull(rect) { return@forEach }
+
+        drawRoundRect(
+            color = Color.Black,
+            size = rect.size,
+            cornerRadius = CornerRadius(10f, 10f),
+            topLeft = rect.topLeft
+        )
+    }
+}
+
+private fun DrawScope.StatusLayer(state: MapPaneState) {
+    val pointerPosition = state.pointerPosition.value
+    // fixme: recreation
+    val organismRects = state.organismRects(this)
+
+    // layer 2, status view
+    requireNotNull(pointerPosition) { return }
+    organismRects.filter {
+        it.second != null && pointerPosition in it.second!!
+    }.map {
+        val rect = it.second!!
+        scale(2f, 2f, rect.center) {
             drawRoundRect(
-                color = Color.Black,
+                color = Color.Red,
                 size = rect.size,
-                cornerRadius = CornerRadius(10f, 10f),
+                cornerRadius = CornerRadius(4f, 4f),
                 topLeft = rect.topLeft
             )
-        }
-
-        // layer 2, status view
-        requireNotNull(pointerPosition) { return@Canvas }
-        organismRects.filter {
-            it.second != null && pointerPosition in it.second!!
-        }.map {
-            val rect = it.second!!
-            scale(2f, 2f, rect.center) {
-                drawRoundRect(
-                    color = Color.Red,
-                    size = rect.size,
-                    cornerRadius = CornerRadius(4f, 4f),
-                    topLeft = rect.topLeft
-                )
-            }
         }
     }
 }
