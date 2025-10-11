@@ -1,13 +1,13 @@
 package ui.pane
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -61,10 +61,11 @@ class MapPaneState {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MapPane(
+    modifier: Modifier = Modifier,
     state: MapPaneState = remember { MapPaneState() }
 ) {
     Canvas(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
             // trace pointer
             .tracePointer { state.pointerPosition.value = it }
             // detect zoom
@@ -78,9 +79,10 @@ fun MapPane(
             val rect = organismRect.second
             requireNotNull(rect) { return@forEach }
 
-            drawRect(
+            drawRoundRect(
                 color = Color.Black,
                 size = rect.size,
+                cornerRadius = CornerRadius(10f, 10f),
                 topLeft = rect.topLeft
             )
         }
@@ -92,9 +94,10 @@ fun MapPane(
         }.map {
             val rect = it.second!!
             scale(2f, 2f, rect.center) {
-                drawRect(
-                    color = Color.Blue,
+                drawRoundRect(
+                    color = Color.Red,
                     size = rect.size,
+                    cornerRadius = CornerRadius(4f, 4f),
                     topLeft = rect.topLeft
                 )
             }
