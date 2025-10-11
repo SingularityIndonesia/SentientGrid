@@ -15,6 +15,12 @@ import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import ui.model.Organism
 import utils.onZoom
@@ -64,6 +70,7 @@ fun MapPane(
     modifier: Modifier = Modifier,
     state: MapPaneState = remember { MapPaneState() }
 ) {
+    val textMeasurer = rememberTextMeasurer()
     Canvas(
         modifier = modifier
             // trace pointer
@@ -72,7 +79,7 @@ fun MapPane(
             .onZoom { state.magnification.value *= it }
     ) {
         OrganismMapLayer(state)
-        StatusLayer(state)
+        StatusLayer(state, textMeasurer)
     }
 }
 
@@ -92,24 +99,67 @@ private fun DrawScope.OrganismMapLayer(state: MapPaneState) {
     }
 }
 
-private fun DrawScope.StatusLayer(state: MapPaneState) {
+private fun DrawScope.StatusLayer(state: MapPaneState, textMeasurer: TextMeasurer) {
     val pointerPosition = state.pointerPosition.value
     requireNotNull(pointerPosition) { return }
 
     // fixme: recreation
     val organismRects = state.organismRects(this)
-
-    organismRects.filter {
+    val hoveredOrganism = organismRects.filter {
         it.second != null && pointerPosition in it.second!!
-    }.forEach {
+    }
+    if (hoveredOrganism.isNotEmpty()) {
+        drawRect(
+            topLeft = Offset.Zero,
+            size = this.size,
+            color = Color.Black.copy(alpha = .8f)
+        )
+    }
+
+    hoveredOrganism.forEach {
         val rect = it.second!!
-        scale(2f, 2f, rect.center) {
-            drawRoundRect(
-                color = Color.Red,
-                size = rect.size,
-                cornerRadius = CornerRadius(4f, 4f),
-                topLeft = rect.topLeft
+        val status = it.first.status.orEmpty()
+        status.forEachIndexed { index, status ->
+            val topRight = rect.topRight + Offset(24.dp.toPx(), (index - 1) * 32.dp.toPx())
+            val fontSize = 10f
+            val lineHeight = 14f
+
+            drawText(
+                textMeasurer = textMeasurer,
+                text = "${status.name}: ${status.value}",
+                topLeft = topRight,
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = TextUnit(fontSize, type = TextUnitType.Sp),
+                    lineHeight = TextUnit(lineHeight, type = TextUnitType.Sp)
+                )
             )
+
+            val startLine = rect.centerRight
+            val firstJoint = topRight + Offset(-4.dp.toPx(), 18.dp.toPx())
+
+            drawLine(
+                start = startLine,
+                end = firstJoint,
+                color = Color.White,
+                strokeWidth = 2.dp.toPx()
+            )
+
+            drawLine(
+                start = firstJoint,
+                end = firstJoint + Offset(50.dp.toPx(), 0f),
+                color = Color.White,
+                strokeWidth = 2.dp.toPx()
+            )
+
+            scale(2f, 2f, rect.center) {
+                drawRoundRect(
+                    color = Color.Red,
+                    size = rect.size,
+                    cornerRadius = CornerRadius(4f, 4f),
+                    topLeft = rect.topLeft
+                )
+            }
         }
     }
 }

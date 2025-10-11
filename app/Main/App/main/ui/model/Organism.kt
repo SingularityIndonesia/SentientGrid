@@ -26,6 +26,10 @@ val dummyOrganism = (0 until 100).map {
                 name = "LNG",
                 value = Random.nextDouble(3000.0) - 1500.0
             ),
+            Organism.Status(
+                name = "TMP",
+                value = Random.nextDouble(60.0) + 40.0
+            ),
         )
     )
 }
