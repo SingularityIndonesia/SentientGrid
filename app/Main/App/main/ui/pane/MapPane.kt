@@ -79,7 +79,6 @@ fun MapPane(
 private fun DrawScope.OrganismMapLayer(state: MapPaneState) {
     val organismRects = state.organismRects(this)
 
-    // layer 1, organism map
     organismRects.forEach { organismRect ->
         val rect = organismRect.second
         requireNotNull(rect) { return@forEach }
@@ -95,11 +94,11 @@ private fun DrawScope.OrganismMapLayer(state: MapPaneState) {
 
 private fun DrawScope.StatusLayer(state: MapPaneState) {
     val pointerPosition = state.pointerPosition.value
+    requireNotNull(pointerPosition) { return }
+
     // fixme: recreation
     val organismRects = state.organismRects(this)
 
-    // layer 2, status view
-    requireNotNull(pointerPosition) { return }
     organismRects.filter {
         it.second != null && pointerPosition in it.second!!
     }.map {
