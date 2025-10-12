@@ -13,7 +13,7 @@ data class Organism(
     )
 }
 
-val dummyOrganism = (0 until 100).map {
+val dummyOrganism = (0 until 5).map {
     Organism(
         id = "$it",
         name = "Organism $it",

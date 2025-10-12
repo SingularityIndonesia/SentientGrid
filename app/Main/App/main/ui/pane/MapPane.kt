@@ -22,25 +22,26 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import ui.model.Organism
 import utils.onZoom
 import utils.tracePointer
 
 
 class MapPaneState {
-    val organism = mutableStateListOf<Organism>()
+    val organisms = mutableStateListOf<Organism>()
     val magnification = mutableStateOf(1f)
     val pointerPosition = mutableStateOf<Offset?>(null)
+    private val mutex = Mutex()
 
     fun organismRects(drawScope: DrawScope): List<Pair<Organism, Rect?>> {
         return with(drawScope) {
             val frameRef = Offset.Zero + center
-
-            val organism = organism
             val organismSize = Size(10.dp.toPx(), 10.dp.toPx())
                 .div(magnification.value)
 
-            organism.map { organism ->
+            organisms.map { organism ->
                 val magnification = magnification.value
 
                 val lat = organism.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
@@ -60,6 +61,21 @@ class MapPaneState {
 
                 organism to Rect(topLeft, topLeft + bottomRight)
             }
+        }
+    }
+
+    suspend fun update(organism: Organism) {
+        mutex.withLock {
+            println("Before: $organisms")
+            val index = organisms.indexOfFirst { it.id == organism.id }
+            val head = organisms.take(index)
+            val tail = organisms.takeLast(organisms.size - index - 1)
+
+            val newList = head + organism + tail
+            organisms.clear()
+            organisms.addAll(newList)
+
+            println("After: $organisms")
         }
     }
 }

@@ -29,4 +29,11 @@ dependency {
         api(project(":Font"))
         api(project(":Core"))
     }
+
+    test {
+
+        test {
+            api(libs.junit)
+        }
+    }
 }
