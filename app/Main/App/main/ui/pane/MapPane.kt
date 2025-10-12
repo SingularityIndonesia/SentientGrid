@@ -65,6 +65,7 @@ class MapPaneState {
     }
 
     suspend fun update(organism: Organism) {
+        // fixme: hyper memory allocation
         mutex.withLock {
             val index = organisms.indexOfFirst { it.id == organism.id }
             val head = organisms.take(index)
