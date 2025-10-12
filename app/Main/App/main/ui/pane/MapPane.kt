@@ -66,7 +66,6 @@ class MapPaneState {
 
     suspend fun update(organism: Organism) {
         mutex.withLock {
-            println("Before: $organisms")
             val index = organisms.indexOfFirst { it.id == organism.id }
             val head = organisms.take(index)
             val tail = organisms.takeLast(organisms.size - index - 1)
@@ -74,8 +73,6 @@ class MapPaneState {
             val newList = head + organism + tail
             organisms.clear()
             organisms.addAll(newList)
-
-            println("After: $organisms")
         }
     }
 }
