@@ -16,10 +16,10 @@ import ui.model.Organism
 class MapPaneState {
     private val mutex = Mutex()
 
-    val organisms = mutableStateListOf<Organism>()
     val magnification = mutableStateOf(1f)
     val pointerPosition = mutableStateOf<Offset?>(null)
-    val organismSize = mutableStateOf(10.dp)
+
+    val organisms = mutableStateListOf<Organism>()
     val organismPositions: List<Pair<Organism, Offset?>>
         get() {
             val magnification = magnification.value
@@ -41,28 +41,6 @@ class MapPaneState {
                 val offset = Offset(lat, lng)
 
                 organism to offset
-            }
-        }
-
-    context(drawScope: DrawScope)
-    val organismRects: List<Pair<Organism, Rect?>>
-        get() = with(drawScope) {
-            val frameRef = center
-
-            return organismPositions.map {
-                val position = it.second
-                requireNotNull(position) { return@map it.first to null }
-
-                val organismSize = organismSize.value.toPx()
-                    .let { size -> Size(size, size) }
-
-                val rect = organismSize.toRect()
-                val centeredRect = rect
-                    .translate(frameRef)
-                    .translate(position)
-                    .translate(organismSize.center * -1f)
-
-                it.first to centeredRect
             }
         }
 

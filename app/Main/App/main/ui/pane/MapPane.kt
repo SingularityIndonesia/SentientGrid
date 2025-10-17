@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.dp
 import ui.component.SimpleOrganism
 import ui.component.SimpleStatus
 import ui.model.Organism
@@ -23,8 +24,8 @@ import utils.tracePointer
 fun MapPane(
     modifier: Modifier = Modifier,
     state: MapPaneState = remember { MapPaneState() },
-    organism: DrawScope.(Organism, Rect) -> Unit = SimpleOrganism,
-    status: DrawScope.(Organism, Rect, TextMeasurer) -> Unit = SimpleStatus
+    organism: DrawScope.(Organism, Offset) -> Unit = SimpleOrganism,
+    status: DrawScope.(Organism, Offset, TextMeasurer) -> Unit = SimpleStatus
 ) {
     val textMeasurer = rememberTextMeasurer()
     Canvas(
@@ -34,49 +35,68 @@ fun MapPane(
             // detect zoom
             .onZoom { state.magnification.value *= it }
     ) {
-        OrganismMapLayer(state) { organism, rect ->
-            organism(this, organism, rect)
+        OrganismMapLayer(state) { organism, center ->
+            organism(this, organism, center)
         }
-        StatusLayer(state) { organism, rect ->
-            status(this, organism, rect, textMeasurer)
+        StatusLayer(state) { organism, center ->
+            status(this, organism, center, textMeasurer)
         }
     }
 }
 
-private fun DrawScope.OrganismMapLayer(state: MapPaneState, organism: DrawScope.(Organism, Rect) -> Unit) {
-    val organismRects = state.organismRects
+private fun DrawScope.OrganismMapLayer(state: MapPaneState, organism: DrawScope.(Organism, Offset) -> Unit) {
+    val canvasCenter = center
+    val positions = state.organismPositions
 
-    organismRects.forEach { organismRect ->
-        val rect = organismRect.second
-        requireNotNull(rect) { return@forEach }
-        organism(this, organismRect.first, rect)
+    positions.forEach { position ->
+        val center = position.second?.plus(canvasCenter)
+        requireNotNull(center) { return@forEach }
+        organism(this, position.first, center)
     }
 }
 
-private fun DrawScope.StatusLayer(state: MapPaneState, onHovered: DrawScope.(Organism, Rect) -> Unit) {
+private fun DrawScope.StatusLayer(state: MapPaneState, onHovered: DrawScope.(Organism, Offset) -> Unit) {
+    val canvasCenter = center
     val pointerPosition = state.pointerPosition.value
     requireNotNull(pointerPosition) { return }
 
-    val hoveredOrganism = state.organismRects
-        .filter { it.second != null }
-        .map {
-            @Suppress("UNCHECKED_CAST")
-            it as Pair<Organism, Rect>
+    val interactionRectProto = 10.dp.toPx()
+        .let { Rect(Offset.Zero, Offset(it, it)) }
+
+    val interactionRectProtoCenter = interactionRectProto.center
+
+    val hoverAbleArea = state.organismPositions
+        .mapNotNull {
+            requireNotNull(it.second) { return@mapNotNull null }
+
+            val rect = interactionRectProto
+                .translate(it.second!!)
+                .translate(canvasCenter)
+                .translate(interactionRectProtoCenter * -1f)
+
+            it.first to rect
         }
-        .filter {
-            pointerPosition in it.second
-        }
+
+    // debug draw hoverable area
+    // hoverAbleArea.forEach {
+    //     drawRect(
+    //         color = Color.Cyan.copy(alpha = .5f),
+    //         topLeft = it.second.topLeft,
+    //         size = it.second.size
+    //     )
+    // }
+
+    val hoveredOrganism = hoverAbleArea
+        .firstOrNull { pointerPosition in it.second }
+
+    requireNotNull(hoveredOrganism) { return }
 
     // draw black shades covering whole screen
-    if (hoveredOrganism.isNotEmpty()) {
-        drawRect(
-            topLeft = Offset.Zero,
-            size = this.size,
-            color = Color.Black.copy(alpha = .8f)
-        )
-    }
+    drawRect(
+        topLeft = Offset.Zero,
+        size = this.size,
+        color = Color.Black.copy(alpha = .3f)
+    )
 
-    hoveredOrganism.forEach {
-        onHovered.invoke(this, it.first, it.second)
-    }
+    onHovered.invoke(this, hoveredOrganism.first, hoveredOrganism.second.center)
 }
