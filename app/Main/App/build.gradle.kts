@@ -1,6 +1,7 @@
 import plugin.convention.companion.compileWasmJs
 import plugin.convention.companion.dependency
 import plugin.convention.companion.enableContextParameter
+import plugin.convention.companion.enableExplicitBackingField
 import plugin.convention.companion.withKotlinMultiplatformExtension
 
 plugins {
@@ -16,6 +17,7 @@ compileWasmJs(
     "mainApp"
 )
 
+enableExplicitBackingField()
 enableContextParameter()
 
 withKotlinMultiplatformExtension {

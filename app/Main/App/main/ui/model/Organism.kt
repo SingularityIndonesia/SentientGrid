@@ -13,18 +13,18 @@ data class Organism(
     )
 }
 
-val dummyOrganism = (0 until 5).map {
+val dummyOrganism = (0 until 1).map {
     Organism(
         id = "$it",
         name = "Organism $it",
         status = listOf(
             Organism.Status(
                 name = "LAT",
-                value = Random.nextDouble(3000.0) - 1500.0
+                value = Random.nextDouble(2000.0) - 1000.0
             ),
             Organism.Status(
                 name = "LNG",
-                value = Random.nextDouble(3000.0) - 1500.0
+                value = Random.nextDouble(2000.0) - 1000.0
             ),
             Organism.Status(
                 name = "TMP",
