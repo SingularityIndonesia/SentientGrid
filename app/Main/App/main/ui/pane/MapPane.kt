@@ -2,96 +2,21 @@ package ui.pane
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.center
-import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import ui.component.SimpleOrganism
 import ui.component.SimpleStatus
 import ui.model.Organism
 import utils.onZoom
 import utils.tracePointer
 
-
-class MapPaneState {
-    private val mutex = Mutex()
-
-    val organisms = mutableStateListOf<Organism>()
-    val magnification = mutableStateOf(1f)
-    val pointerPosition = mutableStateOf<Offset?>(null)
-    val organismSize = mutableStateOf(10.dp)
-    val organismPositions: List<Pair<Organism, Offset?>>
-        get() {
-            val magnification = magnification.value
-
-            return organisms.map { organism ->
-                val lat = organism.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
-                    ?.times(magnification)
-                    ?.toFloat()
-
-                val lng = organism.status?.firstOrNull { status -> status.name == "LNG" }?.value?.toDouble()
-                    ?.times(magnification)
-                    ?.toFloat()
-
-                // no position provided, cannot draw
-                requireNotNull(lat) { return@map organism to null }
-                requireNotNull(lng) { return@map organism to null }
-
-                // fixme: adjust this to latlng magnitude later
-                val offset = Offset(lat, lng)
-
-                organism to offset
-            }
-        }
-
-    context(drawScope: DrawScope)
-    val organismRects: List<Pair<Organism, Rect?>>
-        get() = with(drawScope) {
-            val frameRef = center
-
-            return organismPositions.map {
-                val position = it.second
-                requireNotNull(position) { return@map it.first to null }
-
-                val organismSize = organismSize.value.toPx()
-                    .let { size -> Size(size, size) }
-
-                val rect = organismSize.toRect()
-                val centeredRect = rect
-                    .translate(frameRef)
-                    .translate(position)
-                    .translate(organismSize.center * -1f)
-
-                it.first to centeredRect
-            }
-        }
-
-    suspend fun update(organism: Organism) {
-        // fixme: hyper memory allocation
-        mutex.withLock {
-            val index = organisms.indexOfFirst { it.id == organism.id }
-            val head = organisms.take(index)
-            val tail = organisms.takeLast(organisms.size - index - 1)
-
-            val newList = head + organism + tail
-            organisms.clear()
-            organisms.addAll(newList)
-        }
-    }
-}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
