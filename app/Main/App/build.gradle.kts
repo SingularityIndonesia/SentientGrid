@@ -12,13 +12,13 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+enableExplicitBackingField()
+enableContextParameter()
+
 compileWasmJs(
     "mainApp.js",
     "mainApp"
 )
-
-enableExplicitBackingField()
-enableContextParameter()
 
 withKotlinMultiplatformExtension {
     sourceSets.commonMain {

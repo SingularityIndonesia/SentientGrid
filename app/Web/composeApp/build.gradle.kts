@@ -12,13 +12,13 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+enableExplicitBackingField()
+enableContextParameter()
+
 compileWasmJs(
     outputFileName = "composeApp.js",
     outputModuleName = "composeApp"
 )
-
-enableExplicitBackingField()
-enableContextParameter()
 
 dependency {
     common {
