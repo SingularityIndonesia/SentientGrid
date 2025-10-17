@@ -62,9 +62,7 @@ private fun DrawScope.StatusLayer(state: MapPaneState, onHovered: DrawScope.(Org
 
     val interactionRectProto = 10.dp.toPx()
         .let { Rect(Offset.Zero, Offset(it, it)) }
-
     val interactionRectProtoCenter = interactionRectProto.center
-
     val hoverAbleArea = state.organismPositions
         .mapNotNull {
             requireNotNull(it.second) { return@mapNotNull null }
