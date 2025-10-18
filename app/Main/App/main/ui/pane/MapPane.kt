@@ -16,6 +16,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import designsystem.`24dp`
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import ui.component.SimpleIndicator
 import ui.component.SimpleOrganism
@@ -56,6 +57,7 @@ fun MapPane(
             updateIndicator(record)
             scope.launch {
                 delay(1000)
+                ensureActive()
                 state.onUpdateConsumed(record)
             }
         }
