@@ -10,6 +10,7 @@ val `10dp` = 10.dp
 val `16dp` = 16.dp
 val `20dp` = 20.dp
 val `24dp` = 24.dp
+val `50dp` = 50.dp
 
 val `4sp` = 4.sp
 val `6sp` = 6.sp

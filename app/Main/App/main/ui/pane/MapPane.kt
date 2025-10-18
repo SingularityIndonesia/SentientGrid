@@ -2,19 +2,19 @@ package ui.pane
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
+import designsystem.`24dp`
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ui.component.SimpleIndicator
@@ -22,6 +22,7 @@ import ui.component.SimpleOrganism
 import ui.component.SimpleStatus
 import ui.model.Organism
 import utils.onZoom
+import utils.toOffsetSymmetric
 import utils.tracePointer
 
 
@@ -67,12 +68,29 @@ private fun OrganismMapLayer(
     organism: DrawScope.(Organism, Offset) -> Unit
 ) {
     val canvasCenter = drawScope.center
+    val offsetTolerance = `24dp`.toOffsetSymmetric()
+    val canvasRect = drawScope.size.toRect()
+        // apply rectangle tolerance for item filtering
+        .let {
+            Rect(
+                it.topLeft - offsetTolerance,
+                it.bottomRight + offsetTolerance
+            )
+        }
+
     val positions = state.organismPositions
+        // apply center pivot
+        .map {
+            it.first to it.second?.plus(canvasCenter)
+        }
+        // ignore items that isn't visible or exceed canvas boundaries
+        .filter {
+            it.second != null && it.second!! in canvasRect
+        }
 
     positions.forEach { position ->
-        val center = position.second?.plus(canvasCenter)
-        requireNotNull(center) { return@forEach }
-        organism(drawScope, position.first, center)
+        requireNotNull(position.second) { return@forEach }
+        organism(drawScope, position.first, position.second!!)
     }
 }
 
