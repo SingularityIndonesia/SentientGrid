@@ -25,6 +25,7 @@ import designsystem.`6sp`
 import ui.model.Organism
 import utils.toSizeSymmetric
 
+// fixme: heavy canvas calculation
 val SimpleStatus: DrawScope.(Organism, Offset, TextMeasurer) -> Unit = { organism, center, textMeasurer ->
     val fontSize = `6sp`.toPx()
     val lineHeight = `14sp`.toPx()

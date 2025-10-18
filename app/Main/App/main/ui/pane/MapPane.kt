@@ -114,32 +114,34 @@ fun MapPane(
     }
 }
 
-// fixme: heavy canvas calculation
 context(drawScope: DrawScope)
 private fun OrganismMapLayer(
     state: MapPaneState,
     organism: DrawScope.(Organism, Offset) -> Unit
 ) {
-    val canvasCenter = drawScope.center
-    val offsetTolerance = `24dp`.toOffsetSymmetric()
-    val canvasRect = drawScope.size.toRect()
-        // apply rectangle tolerance for item filtering
-        .let {
-            Rect(
-                it.topLeft - offsetTolerance,
-                it.bottomRight + offsetTolerance
-            )
-        }
+    // fixme: heavy canvas calculation
+    val positions = run {
+        val canvasCenter = drawScope.center
+        val offsetTolerance = `24dp`.toOffsetSymmetric()
+        val canvasRect = drawScope.size.toRect()
+            // apply rectangle tolerance for item filtering
+            .let {
+                Rect(
+                    it.topLeft - offsetTolerance,
+                    it.bottomRight + offsetTolerance
+                )
+            }
 
-    val positions = state.organismPositions
-        // apply center pivot
-        .map {
-            it.first to it.second?.plus(canvasCenter)
-        }
-        // ignore items that isn't visible or exceed canvas boundaries
-        .filter {
-            it.second != null && it.second!! in canvasRect
-        }
+        state.organismPositions
+            // apply center pivot
+            .map {
+                it.first to it.second?.plus(canvasCenter)
+            }
+            // ignore items that isn't visible or exceed canvas boundaries
+            .filter {
+                it.second != null && it.second!! in canvasRect
+            }
+    }
 
     positions.forEach { position ->
         requireNotNull(position.second) { return@forEach }
@@ -147,44 +149,46 @@ private fun OrganismMapLayer(
     }
 }
 
-// fixme: heavy canvas calculation
 context(drawScope: DrawScope)
 private fun StatusLayer(
     state: MapPaneState,
     onHovered: DrawScope.(Organism, Offset) -> Unit
 ) {
-    val canvasCenter = drawScope.center
-    val pointerPosition = state.pointerPosition.value
-    requireNotNull(pointerPosition) { return }
+    // fixme: heavy canvas calculation
+    val hoveredOrganism = run {
+        val canvasCenter = drawScope.center
+        val pointerPosition = state.pointerPosition.value
+        requireNotNull(pointerPosition) { return }
 
-    val interactionRectProto = with(drawScope) { 10.dp.toPx() }
-        .let { Rect(Offset.Zero, Offset(it, it)) }
-    val interactionRectProtoCenter = interactionRectProto.center
-    val hoverAbleArea = state.organismPositions
-        .mapNotNull {
-            requireNotNull(it.second) { return@mapNotNull null }
+        val interactionRectProto = with(drawScope) { 10.dp.toPx() }
+            .let { Rect(Offset.Zero, Offset(it, it)) }
+        val interactionRectProtoCenter = interactionRectProto.center
+        val hoverAbleArea = state.organismPositions
+            .mapNotNull {
+                requireNotNull(it.second) { return@mapNotNull null }
 
-            val rect = interactionRectProto
-                .translate(it.second!!)
-                .translate(canvasCenter)
-                .translate(interactionRectProtoCenter * -1f)
+                val rect = interactionRectProto
+                    .translate(it.second!!)
+                    .translate(canvasCenter)
+                    .translate(interactionRectProtoCenter * -1f)
 
-            it.first to rect
-        }
+                it.first to rect
+            }
 
-    // debug draw hoverable area
-    // with(drawScope) {
-    //     hoverAbleArea.forEach {
-    //         drawRect(
-    //             color = Color.Cyan.copy(alpha = .5f),
-    //             topLeft = it.second.topLeft,
-    //             size = it.second.size
-    //         )
-    //     }
-    // }
+        // debug draw hoverable area
+        // with(drawScope) {
+        //     hoverAbleArea.forEach {
+        //         drawRect(
+        //             color = Color.Cyan.copy(alpha = .5f),
+        //             topLeft = it.second.topLeft,
+        //             size = it.second.size
+        //         )
+        //     }
+        // }
 
-    val hoveredOrganism = hoverAbleArea
-        .firstOrNull { pointerPosition in it.second }
+        hoverAbleArea
+            .firstOrNull { pointerPosition in it.second }
+    }
 
     requireNotNull(hoveredOrganism) { return }
 

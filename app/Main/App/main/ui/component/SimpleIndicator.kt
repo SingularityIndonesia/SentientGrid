@@ -13,6 +13,7 @@ import utils.toSizeSymmetric
 private val DrawScope.simpleOrganismSize
     get() = `10dp`.toSizeSymmetric()
 
+// fixme: heavy canvas calculation
 val SimpleIndicator: DrawScope.(Pair<Organism, Organism>) -> Unit = { data ->
     val cornerRadius = `4dp`.toPx()
     val organism = data.second
