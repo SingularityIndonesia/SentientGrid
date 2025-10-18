@@ -15,7 +15,7 @@ private val DrawScope.simpleOrganismSize
 
 val SimpleIndicator: DrawScope.(Pair<Organism, Organism>) -> Unit = { data ->
     val cornerRadius = `4dp`.toPx()
-    val organism = data.first
+    val organism = data.second
 
     val organismCenter = run {
         val lat = organism.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()

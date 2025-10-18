@@ -53,7 +53,55 @@ fun MapPane(
         StatusLayer(state) { organism, center ->
             status(organism, center, textMeasurer)
         }
-        updatedOrganism.forEach { record ->
+
+        // region update indicator
+        // fixme: boilerplate
+        // fixme: heavy canvas calculation
+        val offsetTolerance = `24dp`.toOffsetSymmetric()
+        val canvasRect = size.toRect()
+            // apply rectangle tolerance for item filtering
+            .let {
+                Rect(
+                    it.topLeft - offsetTolerance,
+                    it.bottomRight + offsetTolerance
+                )
+            }
+
+        val updatedOrganismPositions = updatedOrganism.map {
+            val organismCenter = run {
+                val lat = it.second.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
+                    // fixme
+                    //?.times(magnification)
+                    ?.toFloat()
+
+                val lng = it.second.status?.firstOrNull { status -> status.name == "LNG" }?.value?.toDouble()
+                    // fixme
+                    //?.times(magnification)
+                    ?.toFloat()
+
+                // no position provided, cannot draw
+                requireNotNull(lat) { return@run null }
+                requireNotNull(lng) { return@run null }
+
+                // fixme: adjust this to latlng magnitude later
+                val offset = Offset(lat, lng) + this@Canvas.center
+                offset
+            }
+
+            it to organismCenter
+        }
+
+        // in canvas organism
+        // audit by position shall within the canvas
+        val validUpdatedOrganism = updatedOrganismPositions
+            .filter {
+                it.second != null && it.second!! in canvasRect
+            }
+            .map {
+                it.first
+            }
+
+        validUpdatedOrganism.forEach { record ->
             updateIndicator(record)
             scope.launch {
                 delay(1000)
@@ -61,9 +109,11 @@ fun MapPane(
                 state.onUpdateConsumed(record)
             }
         }
+        // endregion
     }
 }
 
+// fixme: heavy canvas calculation
 context(drawScope: DrawScope)
 private fun OrganismMapLayer(
     state: MapPaneState,
@@ -96,6 +146,7 @@ private fun OrganismMapLayer(
     }
 }
 
+// fixme: heavy canvas calculation
 context(drawScope: DrawScope)
 private fun StatusLayer(
     state: MapPaneState,
