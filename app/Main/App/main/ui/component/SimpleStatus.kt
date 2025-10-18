@@ -2,7 +2,6 @@ package ui.component
 
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Color
@@ -25,8 +24,7 @@ val SimpleStatus: DrawScope.(Organism, Offset, TextMeasurer) -> Unit = { organis
         fontWeight = FontWeight.Bold
     )
     val status = organism.status.orEmpty()
-    val overlayOrganismSize = `20dp`.toPx()
-        .let { Size(it, it) }
+    val overlayOrganismSize = `20dp`.toSizeSymmetric()
     val overlayOrganismRect = overlayOrganismSize
         .toRect()
         .translate(center)
