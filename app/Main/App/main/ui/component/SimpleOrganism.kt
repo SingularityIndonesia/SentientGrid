@@ -10,10 +10,10 @@ import androidx.compose.ui.unit.dp
 import ui.model.Organism
 
 private val DrawScope.simpleOrganismSize
-    get() = 10.dp.toPx().let { Size(it, it) }
+    get() = `10dp`.toPx().let { Size(it, it) }
 
 val SimpleOrganism: DrawScope.(Organism, Offset) -> Unit = { _, center ->
-    val cornerRadius = 4.dp.toPx()
+    val cornerRadius = `4dp`.toPx()
     val size = simpleOrganismSize
 
     // debug coordinate guide
