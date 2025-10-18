@@ -1,5 +1,6 @@
 import plugin.convention.companion.compileWasmJs
 import plugin.convention.companion.dependency
+import plugin.convention.companion.enableContextParameter
 import plugin.convention.companion.withKotlinMultiplatformExtension
 
 plugins {
@@ -9,6 +10,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 }
+
+enableContextParameter()
 
 compileWasmJs(
     "mainCore.js",

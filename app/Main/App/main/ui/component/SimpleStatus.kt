@@ -12,7 +12,18 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import designsystem.`14sp`
+import designsystem.`18sp`
+import designsystem.`20dp`
+import designsystem.`24dp`
+import designsystem.`2dp`
+import designsystem.`32sp`
+import designsystem.`4dp`
+import designsystem.`4sp`
+import designsystem.`50sp`
+import designsystem.`6sp`
 import ui.model.Organism
+import utils.toSizeSymmetric
 
 val SimpleStatus: DrawScope.(Organism, Offset, TextMeasurer) -> Unit = { organism, center, textMeasurer ->
     val fontSize = `6sp`.toPx()

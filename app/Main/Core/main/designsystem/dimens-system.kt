@@ -2,12 +2,12 @@
 
 package designsystem
 
-val SystemToken.`small-spacing` get() = SIZE_4
-val SystemToken.`medium-spacing` get() = SIZE_8
-val SystemToken.`large-spacing` get() = SIZE_16
-val SystemToken.`extra-large-spacing` get() = SIZE_24
-val SystemToken.`paragraph-spacing` get() = SIZE_16
-val SystemToken.`small-padding` get() = SIZE_4
-val SystemToken.`medium-padding` get() = SIZE_8
-val SystemToken.`large-padding` get() = SIZE_16
-val SystemToken.`extra-large-padding` get() = SIZE_24
+val SystemToken.`small-spacing` get() = `4dp`
+val SystemToken.`medium-spacing` get() = `8dp`
+val SystemToken.`large-spacing` get() = `16dp`
+val SystemToken.`extra-large-spacing` get() = `24dp`
+val SystemToken.`paragraph-spacing` get() = `16dp`
+val SystemToken.`small-padding` get() = `4dp`
+val SystemToken.`medium-padding` get() = `8dp`
+val SystemToken.`large-padding` get() = `16dp`
+val SystemToken.`extra-large-padding` get() = `24dp`
