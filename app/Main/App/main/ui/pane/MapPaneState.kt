@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -13,7 +12,6 @@ import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import designsystem.`24dp`
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ui.model.Organism
@@ -57,14 +55,13 @@ class MapPaneState(
             }
         }
 
-    private val _updatedOrganism = mutableStateListOf<Pair<Organism, Organism>>()
-    private val updatedOrganismResultState = mutableStateOf<List<Pair<Organism, Organism>>>(emptyList())
+    private val updatedOrganism = mutableStateListOf<Pair<Organism, Organism>>()
 
     @OptIn(ExperimentalStdlibApi::class)
     @Composable
     fun updatedOrganism(): State<List<Pair<Organism, Organism>>> = snapshotStateOf {
         require(canvasSize.value != Size.Zero) { return@snapshotStateOf emptyList() }
-        require(_updatedOrganism.isNotEmpty()) { return@snapshotStateOf emptyList() }
+        require(updatedOrganism.isNotEmpty()) { return@snapshotStateOf emptyList() }
 
         // fixme: boilerplate
         val offsetTolerance = with(density) { `24dp`.toOffsetSymmetric() }
@@ -78,7 +75,7 @@ class MapPaneState(
                 )
             }
 
-        val updatedOrganismPositions = _updatedOrganism.map {
+        val updatedOrganismPositions = updatedOrganism.map {
             val organismCenter = run {
                 val lat = it.second.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
                     // fixme
@@ -122,12 +119,12 @@ class MapPaneState(
             val newList = head + organism + tail
             organisms.clear()
             organisms.addAll(newList)
-            _updatedOrganism.add(old to organism)
+            updatedOrganism.add(old to organism)
         }
     }
 
     fun onUpdateConsumed(record: Pair<Organism, Organism>) {
-        _updatedOrganism.remove(record)
+        updatedOrganism.remove(record)
     }
 }
 
