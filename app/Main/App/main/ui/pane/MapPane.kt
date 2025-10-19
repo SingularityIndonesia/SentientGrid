@@ -56,7 +56,7 @@ fun MapPane(
         updatedOrganism.forEach { record ->
             updateIndicator(record)
             scope.launch {
-                delay(1000)
+                delay(500)
                 ensureActive()
                 state.onUpdateConsumed(record)
             }
