@@ -29,7 +29,7 @@ fun WorldScreen() {
     // emulate update dummy
     LaunchedEffect(Unit) {
         while (true) {
-            delay(60)
+            delay(10)
 
             val org = mapPaneState.organisms
                 .random()
