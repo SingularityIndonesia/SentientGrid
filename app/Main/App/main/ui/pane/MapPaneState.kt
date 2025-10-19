@@ -22,7 +22,6 @@ import utils.toOffsetSymmetric
 
 class MapPaneState(
     private val density: Density,
-    private val scope: CoroutineScope
 ) {
     private val mutex = Mutex()
 
@@ -136,6 +135,5 @@ class MapPaneState(
 @Composable
 fun rememberMapPaneState(): MapPaneState {
     val density = LocalDensity.current
-    val scope = rememberCoroutineScope()
-    return remember { MapPaneState(density, scope) }
+    return remember { MapPaneState(density) }
 }
