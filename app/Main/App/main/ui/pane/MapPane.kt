@@ -2,7 +2,7 @@ package ui.pane
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -11,9 +11,11 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import designsystem.`24dp`
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
@@ -31,17 +33,18 @@ import utils.tracePointer
 @Composable
 fun MapPane(
     modifier: Modifier = Modifier,
-    state: MapPaneState = remember { MapPaneState() },
+    state: MapPaneState = rememberMapPaneState(),
     organism: DrawScope.(Organism, Offset) -> Unit = SimpleOrganism,
     status: DrawScope.(Organism, Offset, TextMeasurer) -> Unit = SimpleStatus,
     updateIndicator: DrawScope.(Pair<Organism, Organism>) -> Unit = SimpleIndicator
 ) {
     val scope = rememberCoroutineScope()
     val textMeasurer = rememberTextMeasurer()
-    val updatedOrganism = state.updatedOrganism
+    val updatedOrganism by state.updatedOrganism()
 
     Canvas(
         modifier = modifier
+            .onSizeChanged { state.canvasSize.value = it.toSize() }
             // trace pointer
             .tracePointer { state.pointerPosition.value = it }
             // detect zoom
@@ -50,59 +53,7 @@ fun MapPane(
         OrganismMapLayer(state) { organism, center ->
             organism(organism, center)
         }
-        StatusLayer(state) { organism, center ->
-            status(organism, center, textMeasurer)
-        }
-
-        // region update indicator
-        // audit by position shall within the canvas
-        val validUpdatedOrganism = run {
-            // fixme: boilerplate
-            // fixme: heavy canvas calculation
-            val offsetTolerance = `24dp`.toOffsetSymmetric()
-            val canvasRect = size.toRect()
-                // apply rectangle tolerance for item filtering
-                .let {
-                    Rect(
-                        it.topLeft - offsetTolerance,
-                        it.bottomRight + offsetTolerance
-                    )
-                }
-
-            val updatedOrganismPositions = updatedOrganism.map {
-                val organismCenter = run {
-                    val lat = it.second.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
-                        // fixme
-                        //?.times(magnification)
-                        ?.toFloat()
-
-                    val lng = it.second.status?.firstOrNull { status -> status.name == "LNG" }?.value?.toDouble()
-                        // fixme
-                        //?.times(magnification)
-                        ?.toFloat()
-
-                    // no position provided, cannot draw
-                    requireNotNull(lat) { return@run null }
-                    requireNotNull(lng) { return@run null }
-
-                    // fixme: adjust this to latlng magnitude later
-                    val offset = Offset(lat, lng) + this@Canvas.center
-                    offset
-                }
-
-                it to organismCenter
-            }
-
-            updatedOrganismPositions
-                .filter {
-                    it.second != null && it.second!! in canvasRect
-                }
-                .map {
-                    it.first
-                }
-        }
-
-        validUpdatedOrganism.forEach { record ->
+        updatedOrganism.forEach { record ->
             updateIndicator(record)
             scope.launch {
                 delay(1000)
@@ -110,7 +61,9 @@ fun MapPane(
                 state.onUpdateConsumed(record)
             }
         }
-        // endregion
+        StatusLayer(state) { organism, center ->
+            status(organism, center, textMeasurer)
+        }
     }
 }
 

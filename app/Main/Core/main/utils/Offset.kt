@@ -1,11 +1,11 @@
 package utils
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 
-context(drawScope: DrawScope)
+context(density: Density)
 fun Dp.toOffsetSymmetric(): Offset {
-    val px = with(drawScope) { this@toOffsetSymmetric.toPx() }
+    val px = with(density) { this@toOffsetSymmetric.toPx() }
     return Offset(px, px)
 }

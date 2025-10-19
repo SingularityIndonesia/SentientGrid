@@ -6,11 +6,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
 import ui.model.Organism
 import ui.model.dummyOrganism
 import ui.pane.MapPane
-import ui.pane.MapPaneState
+import ui.pane.rememberMapPaneState
 import kotlin.random.Random
 
 
@@ -20,7 +19,7 @@ fun WorldScreen() {
     val organism = remember { dummyOrganism }
 
     // component state
-    val mapPaneState = remember { MapPaneState() }
+    val mapPaneState = rememberMapPaneState()
 
     // init state
     LaunchedEffect(organism) {
@@ -30,7 +29,7 @@ fun WorldScreen() {
     // emulate update dummy
     LaunchedEffect(Unit) {
         while (true) {
-            delay(500)
+            delay(60)
 
             val org = mapPaneState.organisms
                 .random()
