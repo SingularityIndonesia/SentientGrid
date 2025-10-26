@@ -17,32 +17,17 @@ private val DrawScope.simpleOrganismSize
 val SimpleIndicator: DrawScope.(Pair<Organism, Organism>) -> Unit = { data ->
     val cornerRadius = `4dp`.toPx()
     val organism = data.second
+    val pos = Offset(
+        organism.location.lat.toFloat(),
+        organism.location.lng.toFloat()
+    )
 
-    val organismCenter = run {
-        val lat = organism.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
-            // fixme
-            //?.times(magnification)
-            ?.toFloat()
+    val organismCenter = pos + center
 
-        val lng = organism.status?.firstOrNull { status -> status.name == "LNG" }?.value?.toDouble()
-            // fixme
-            //?.times(magnification)
-            ?.toFloat()
-
-        // no position provided, cannot draw
-        requireNotNull(lat) { return@run null }
-        requireNotNull(lng) { return@run null }
-
-        // fixme: adjust this to latlng magnitude later
-        val offset = Offset(lat, lng) + this.center
-        offset
-    }
-
-    if (organismCenter != null)
-        drawRoundRect(
-            color = Color.Green,
-            size = simpleOrganismSize,
-            cornerRadius = CornerRadius(cornerRadius, cornerRadius),
-            topLeft = organismCenter - simpleOrganismSize.center
-        )
+    drawRoundRect(
+        color = Color.Green,
+        size = simpleOrganismSize,
+        cornerRadius = CornerRadius(cornerRadius, cornerRadius),
+        topLeft = organismCenter - simpleOrganismSize.center
+    )
 }

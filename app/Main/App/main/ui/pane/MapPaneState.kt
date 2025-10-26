@@ -42,7 +42,7 @@ class MapPaneState(
             }
         }
 
-    private val updatedOrganism = mutableStateListOf<Pair<Organism, Organism>>()
+    private val  updatedOrganism = mutableStateListOf<Pair<Organism, Organism>>()
 
     @OptIn(ExperimentalStdlibApi::class)
     @Composable
