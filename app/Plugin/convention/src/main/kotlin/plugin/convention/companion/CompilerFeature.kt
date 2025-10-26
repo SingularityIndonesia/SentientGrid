@@ -7,6 +7,9 @@ fun Project.enableExplicitBackingField() {
         compilerOptions {
             freeCompilerArgs.add("-XXLanguage:+ExplicitBackingFields")
         }
+        sourceSets.all {
+            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+        }
     }
 }
 
