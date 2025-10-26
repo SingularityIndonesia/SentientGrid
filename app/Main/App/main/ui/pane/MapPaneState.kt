@@ -32,24 +32,11 @@ class MapPaneState(
         get() {
             // fixme
             //val magnification = magnification.value
-
             return organisms.map { organism ->
-                val lat = organism.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
-                    // fixme
-                    //?.times(magnification)
-                    ?.toFloat()
-
-                val lng = organism.status?.firstOrNull { status -> status.name == "LNG" }?.value?.toDouble()
-                    // fixme
-                    //?.times(magnification)
-                    ?.toFloat()
-
-                // no position provided, cannot draw
-                requireNotNull(lat) { return@map organism to null }
-                requireNotNull(lng) { return@map organism to null }
-
-                // fixme: adjust this to latlng magnitude later
-                val offset = Offset(lat, lng)
+                val offset = Offset(
+                    organism.location.lat.toFloat(),
+                    organism.location.lng.toFloat()
+                )
 
                 organism to offset
             }
@@ -77,22 +64,11 @@ class MapPaneState(
 
         val updatedOrganismPositions = updatedOrganism.map {
             val organismCenter = run {
-                val lat = it.second.status?.firstOrNull { status -> status.name == "LAT" }?.value?.toDouble()
-                    // fixme
-                    //?.times(magnification)
-                    ?.toFloat()
-
-                val lng = it.second.status?.firstOrNull { status -> status.name == "LNG" }?.value?.toDouble()
-                    // fixme
-                    //?.times(magnification)
-                    ?.toFloat()
-
-                // no position provided, cannot draw
-                requireNotNull(lat) { return@run null }
-                requireNotNull(lng) { return@run null }
-
-                // fixme: adjust this to latlng magnitude later
-                val offset = Offset(lat, lng) + canvasRect.center
+                val location = it.second.location
+                val offset = Offset(
+                    location.lat.toFloat(),
+                    location.lng.toFloat()
+                ) + canvasRect.center
                 offset
             }
 
@@ -101,7 +77,7 @@ class MapPaneState(
 
         updatedOrganismPositions
             .filter {
-                it.second != null && it.second!! in canvasRectWithTolerance
+                it.second in canvasRectWithTolerance
             }
             .map {
                 it.first

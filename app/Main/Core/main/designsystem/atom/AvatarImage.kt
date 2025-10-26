@@ -205,7 +205,7 @@ private fun PreviewImageUrl() {
                 ratio = 1f,
                 desc = null,
                 timeSignature = 0L,
-                locationSignature = LatLng(0.0 to 0.0)
+                locationSignature = LatLng(0.0, 0.0)
             ),
             modifier = Modifier.size(64.dp)
         )
