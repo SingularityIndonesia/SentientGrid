@@ -1,4 +1,4 @@
-package ui.basemvi
+package ui.basemvp
 
 class ExampleRoute {
     fun goToDashboard() {

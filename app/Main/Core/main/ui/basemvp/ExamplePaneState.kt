@@ -1,4 +1,4 @@
-package ui.basemvi
+package ui.basemvp
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf

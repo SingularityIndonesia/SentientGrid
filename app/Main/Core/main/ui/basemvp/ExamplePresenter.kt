@@ -1,9 +1,12 @@
-package ui.basemvi
+package ui.basemvp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
+import utils.resumeEnsureActive
 
 /**
  * Job of a presenter is capture intent from UI then proceed the intent and giving back intent result.
@@ -34,7 +37,7 @@ class ExamplePresenter(
                 return@launch
             }
 
-            val result = dataSource.submitLogin(email, password)
+            val result = resumeEnsureActive { dataSource.submitLogin(email,password) }
             result.onSuccess {
                 route.goToDashboard()
             }
