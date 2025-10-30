@@ -15,14 +15,14 @@ fun App(
     onHandled: (AppIntent) -> Unit = {}
 ) {
     val navController = rememberNavController()
-     val isDarkTheme = isSystemInDarkTheme()
-     val deepLinkHandler = rememberDeepLinkHandler(navController)
+    val isDarkTheme = isSystemInDarkTheme()
+    val deepLinkHandler = rememberDeepLinkHandler(navController)
 
-     IntentHandlerEffect(
-         intent,
-         deepLinkHandler,
-         onHandled
-     )
+    IntentHandlerEffect(
+        intent,
+        deepLinkHandler,
+        onHandled
+    )
 
     SingularityTheme(
         darkTheme = false
